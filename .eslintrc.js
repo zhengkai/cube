@@ -1,5 +1,5 @@
 module.exports = {
-    plugins: ['@typescript-eslint'],
+	plugins: ['@typescript-eslint'],
 	parser: '@typescript-eslint/parser',
 	extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
 	parserOptions: {
@@ -12,6 +12,7 @@ module.exports = {
 	env: {
 		es6: true,
 		node: true,
+		browser: true,
 	},
 	rules: {
 		quotes: ['error', 'single'],
@@ -36,6 +37,7 @@ module.exports = {
 		'keyword-spacing': 'error',
 		'no-constant-condition': 'off',
 		'no-empty': ['error', { allowEmptyCatch: true }],
+		'no-empty-function': ['error', { 'allow': ['constructors'] }],
 		'no-multi-spaces': 'error',
 		'no-unused-vars': ['warn', { varsIgnorePattern: '_', args: 'none' }],
 		'no-var': 'error',

@@ -35,37 +35,30 @@ export class BootstrapComponent {
 	tick(step: number, cs: CubeService) {
 
 		const star = cs.get();
-		const row = star[0].slice().fill(0);
 
-		const size = row.length;
+		const x = step % 16;
 
-		// console.log('get', star);
+		star[1][x] = x / 16;
+		star[1][x - 1] = 0;
 
-		let x;
+		/*
+		const x = step % 16;
 
-		const r1 = row.slice();
-		x = step % size;
-		r1[x] = 1;
-		star[3] = r1;
+		star[1][x] = x / 16;
+		star[1][x - 1] = 0;
 
-		const r2 = row.slice();
-		x = (step + 2) % size;
-		r2[x] = 1;
-
-		x = (step - 2 + size) % size;
-		r2[x] = 1;
-		star[7] = r2;
-
-		const y = Math.floor((step / 3) % size);
-
-		let prev = y - 1;
-		if (prev < 0) {
-			prev += size;
+		if (x === 0) {
+			star[1][15] = 0;
 		}
-		star[prev][3] = 0;
-		star[y][3] = 0.5;
 
-		// console.log('set', star);
+		for (let y = 2; y < 5; y++) {
+			star[y][3] = 0.5;
+		}
+
+		const x2 = step % 16;
+
+		star[5][x2] = 1;
+		 */
 
 		cs.set(star);
 	}

@@ -19,6 +19,9 @@ export class CubeService {
 
 	size = 1;
 
+	h = 16;
+	w = 16;
+
 	center: Container;
 	c: Container;
 
@@ -27,7 +30,59 @@ export class CubeService {
 
 	click: Callback;
 
-	set(a: Star = []) {
+	clear() {
+		this.star.forEach(row => {
+			row.forEach((_, i) => {
+				row[i] = 0;
+			});
+		});
+
+		this.starGraph.forEach(row => {
+			row.forEach((_, i) => {
+				row[i].alpha = 0.05;
+			});
+		});
+	}
+
+	set(x: number, y: number, color = 1) {
+
+		y = y | 0;
+		x = x | 0;
+
+		if (y >= this.star.length || y < 0) {
+			return;
+		}
+
+		const row = this.star[y];
+		if (x >= row.length || x < 0) {
+			return;
+		}
+
+		const v = Math.min(1, Math.max(0, color));
+		row[x] = v;
+		this.starGraph[y][x].alpha = Math.max(0.05, v);
+		// console.log(JSON.stringify(this.star));
+	}
+
+	loop(x: number, y: number, color = 1) {
+
+		const height = this.star.length;
+
+		y = y % height;
+		if (y < 0) {
+			y += height;
+		}
+
+		const width = this.star[y].length;
+		x = x % width;
+		if (x < 0) {
+			x += width;
+		}
+
+		this.set(x, y, color);
+	}
+
+	setFull(a: Star = []) {
 
 		a.every((row, y) => {
 
@@ -56,7 +111,21 @@ export class CubeService {
 		});
 	}
 
-	get(): Star {
+	get(x: number, y: number): number {
+
+		if (y >= this.star.length || y < 0) {
+			return 0;
+		}
+
+		const row = this.star[y];
+		if (x >= row.length || x < 0) {
+			return 0;
+		}
+
+		return row[x];
+	}
+
+	getFull(): Star {
 
 		const re = [];
 

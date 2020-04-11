@@ -12,6 +12,14 @@ export class BootstrapComponent {
 
 	stop = false;
 
+	x = 0;
+	y = -1;
+	arrow = 1;
+
+	speed = 500;
+
+	step = 0;
+
 	constructor(
 		private el: ElementRef,
 		private cs: CubeService,
@@ -22,44 +30,87 @@ export class BootstrapComponent {
 			this.stop = !this.stop;
 		};
 
-		let i = 0;
-		window.setInterval(() => {
-			if (this.stop) {
-				return;
-			}
-			i++;
-			this.tick(i, cs);
-		}, 500);
+		this.loop();
+	}
+
+	loop() {
+		if (this.stop) {
+			return;
+		}
+
+		this.tick(this.step, this.cs);
+		this.step++;
+
+		window.setTimeout(() => {
+			this.loop();
+		}, this.speed);
 	}
 
 	tick(step: number, cs: CubeService) {
+		this.tickBlink(step, cs);
+		// this.tickSnow(step, cs);
+		// this.tickMonica(step, cs);
+	}
 
-		const star = cs.get();
+	// 两排雪
+	tickDoubleSnow(step: number, cs: CubeService) {
+		console.log(step, cs);
+	}
 
-		const x = step % 16;
+	// 棋盘格闪烁
+	tickChess(step: number, cs: CubeService) {
+		console.log(step, cs);
+	}
 
-		star[1][x] = x / 16;
-		star[1][x - 1] = 0;
+	tickSnow(step: number, cs: CubeService) {
 
-		/*
-		const x = step % 16;
+		this.speed = 100;
 
-		star[1][x] = x / 16;
-		star[1][x - 1] = 0;
+		this.y++;
 
-		if (x === 0) {
-			star[1][15] = 0;
+		cs.set(this.x, this.y, 1);
+		cs.set(this.x, this.y - 1, 0);
+
+		if (this.y >= 15 || cs.get(this.x, this.y + 1) === 1) {
+
+			this.y = -1;
+			this.x += this.arrow;
+
+			if (this.x > 15) {
+				this.arrow = -1;
+				this.x = 15;
+			} else if (this.x < 0) {
+				this.arrow = 1;
+				this.x = 0;
+			}
+		}
+	}
+
+	tickBlink(step: number, cs: CubeService) {
+
+		this.speed = 1000;
+
+		const blink = step % 2;
+
+		const matrix = cs.getFull();
+
+		for (let y = 0; y < matrix.length; y++) {
+
+			const row = matrix[y];
+
+			for (let x = 0; x < row.length; x++) {
+
+				if (x % 2 === blink) {
+
+					row[x] = 1;
+
+				} else {
+
+					row[x] = 0;
+				}
+			}
 		}
 
-		for (let y = 2; y < 5; y++) {
-			star[y][3] = 0.5;
-		}
-
-		const x2 = step % 16;
-
-		star[5][x2] = 1;
-		 */
-
-		cs.set(star);
+		cs.setFull(matrix);
 	}
 }

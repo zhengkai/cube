@@ -47,9 +47,19 @@ export class BootstrapComponent {
 	}
 
 	tick(step: number, cs: CubeService) {
-		this.tickBlink(step, cs);
+		this.tickFall(step, cs);
+		// this.tickBlink(step, cs);
 		// this.tickSnow(step, cs);
 		// this.tickMonica(step, cs);
+	}
+
+	tickFall(step: number, cs: CubeService) {
+
+		// cs.set(Math.random() * 15, Math.random() * 15, Math.random() * 0.7 + 0.3);
+
+		cs.moveScreen(0, 1);
+
+		cs.set(Math.random() * 15, 0, Math.random() * 0.7 + 0.3);
 	}
 
 	// 两排雪

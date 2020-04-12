@@ -136,6 +136,57 @@ export class CubeService {
 		return re;
 	}
 
+	moveScreen(x: number, y: number) {
+
+		const pos = [x, y].map(i => {
+			if (i > 0) {
+				i = 1;
+			} else if (i < 0) {
+				i = -1;
+			}
+			return i;
+		});
+
+		pos.forEach((p: number, i: number) => {
+
+			if (p === 0) {
+				return;
+			}
+
+			const end = (i === 0 ? this.w : this.h) - 1;
+			const endOther = (i === 1 ? this.w : this.h) - 1;
+			let add = 1;
+			if (p < 0) {
+				add = -1;
+			}
+
+			for (let k = 0; k <= endOther; k++) {
+				for (let j = end - 1; j >= 0; j--) {
+
+					let m = j;
+					if (add < 0) {
+						m = end - j;
+					}
+					const n = m + add;
+
+					if (i === 0) {
+						this.star[k][n] = this.star[k][m];
+						this.star[k][m] = 0;
+					} else {
+						this.star[n][k] = this.star[m][k];
+						this.star[m][k] = 0;
+					}
+				}
+			}
+
+			this.star.forEach((row, y) => {
+				row.forEach((color, x) => {
+					this.set(x, y, color);
+				});
+			});
+		});
+	}
+
 	constructor() {
 
 		const app = new Application({

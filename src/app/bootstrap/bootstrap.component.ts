@@ -16,6 +16,16 @@ export class BootstrapComponent {
 	y = -1;
 	arrow = 1;
 
+	road = -1;
+	roadArrow = 1;
+
+	target = 0;
+
+	roadWidth = 7;
+
+	right = 10;
+	left = 5;
+
 	speed = 500;
 
 	step = 0;
@@ -47,19 +57,100 @@ export class BootstrapComponent {
 	}
 
 	tick(step: number, cs: CubeService) {
-		this.tickFall(step, cs);
+		this.tickRoad2(step, cs);
+		// this.tickRoad(step, cs);
 		// this.tickBlink(step, cs);
 		// this.tickSnow(step, cs);
 		// this.tickMonica(step, cs);
 	}
 
-	tickFall(step: number, cs: CubeService) {
+	tickRect(step: number, cs: CubeService) {
+		const x = 1;
+		const y = 2;
+		const w = 3; // width
+		const h = 4; // height
+	}
+
+	tickRoad2(step: number, cs: CubeService) {
+
+		this.speed = 100;
 
 		// cs.set(Math.random() * 15, Math.random() * 15, Math.random() * 0.7 + 0.3);
+		cs.moveScreen(0, 1);
+
+		const right = 16 - this.roadWidth;
+
+		if (this.road < 0) {
+			this.road = Math.floor(Math.random() * right);
+			this.target = Math.floor(Math.random() * right);
+		}
+
+		let offset = 0;
+		if (this.road < this.target) {
+			offset = -1;
+			this.road++;
+		} else if (this.road > this.target) {
+			offset = 1;
+			this.road--;
+		}
+		if (this.road === this.target) {
+
+			if (offset === 0) {
+
+				this.target = Math.floor(Math.random() * right);
+
+			} else if (offset > 0) {
+
+				const rand = Math.floor(Math.random() * (right - this.target));
+				this.target += rand;
+
+			} else if (offset < 0) {
+
+				const rand = Math.floor(Math.random() * (right - this.target));
+				this.target = rand;
+			}
+		}
+
+		// cs.set(this.target, 0, 0.3);
+		cs.set(this.road, 0, 1);
+		cs.set(this.road + this.roadWidth, 0, 1);
+
+		const j = this.road + this.roadWidth - 1;
+		for (let i = this.road + 1; i <= j; i++) {
+			cs.set(i, 0, 0.3);
+		}
+
+		// for (起始条件; 判断允许; 每次循环做什么) {
+		// }
+
+		// cs.set(Math.random() * 15, 0, Math.random() * 0.7 + 0.3);
+	}
+
+	tickRoad(step: number, cs: CubeService) {
+
+		this.speed = 100;
 
 		cs.moveScreen(0, 1);
 
-		cs.set(Math.random() * 15, 0, Math.random() * 0.7 + 0.3);
+		this.road += this.roadArrow;
+
+		// 路撞到右边
+		if ((this.road + 7) >= this.right) {
+
+			this.roadArrow = -1;
+			this.right = Math.floor(Math.random() * 5) + 11;
+
+		// 路撞到左边
+		} else if (this.road <= this.left) {
+
+			this.roadArrow = 1;
+			this.left = Math.floor(Math.random() * 5);
+		}
+
+		// 路左
+		cs.set(this.road, 0);
+		// 路右
+		cs.set(this.road + this.roadWidth, 0);
 	}
 
 	// 两排雪
